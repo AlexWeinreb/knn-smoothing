@@ -12,7 +12,7 @@ suppressPackageStartupMessages(library(rsvd))
 randomized_pca <- function(tmat, d, seed){
   # @param tmat A non-negative matrix with samples by features
   # @return A matrix with features by samples projected on PCA space
-  set.seed(seed)
+  if(!is.null(seed)) set.seed(seed)
   #rsvd_obj <- rsvd(scale(tmat, center = TRUE, scale = FALSE), k=d)
   #rsvd_obj$u %*% diag(rsvd_obj$d)
   rpca_obj <- rpca(tmat, k=d, center=T, scale=F, retx=T, p=10, q=7)
