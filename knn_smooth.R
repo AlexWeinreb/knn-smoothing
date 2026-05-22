@@ -55,13 +55,14 @@ smoother_aggregate_nearest_nb <- function(mat, D, k){
   })
 }
 
-knn_smoothing <- function(mat, k, d=10, seed=42){
+knn_smoothing <- function(mat, k, d=10, seed=42, verbose=TRUE){
   #' KNN-smoothing on UMI-filtered single-cell RNA-seq data
   #'
   #' @param mat A numeric matrix with gene names on rows and cell names on columns.
   #' @param k Number of nearest neighbours to aggregate.
   #' @param d Number of Principal components.
   #' @param seed Seed number. (default=42)
+  #' @param verbose If TRUE, print progress messages
   #' @return A smoothed numeric matrix.
   #' @examples
   #' X <- matrix(abs(sin(seq(from=1, to=1000, length.out = 1000))),
@@ -82,8 +83,10 @@ knn_smoothing <- function(mat, k, d=10, seed=42){
   S <- mat
   for (p in seq(1, num_steps)){
     k_step <- min(2^p - 1, k)
-    message(paste0('Step ', p, '/', num_steps, ': ',
-                   'Smoothing using k=', k_step))
+    if(verbose){
+      message(paste0('Step ', p, '/', num_steps, ': ',
+                     'Smoothing using k=', k_step))
+    }
     Y <- freeman_tukey_transform(normalization_median(S))
     if (! is.null(d)) {
       Y <- t(randomized_pca(t(Y), d=d, seed=seed))
